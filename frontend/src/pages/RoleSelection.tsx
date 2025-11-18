@@ -16,8 +16,6 @@ export default function RoleSelection() {
       color: 'from-red-500 to-pink-600',
       description: 'Full system access, user management, settings',
       features: ['System Configuration', 'User Management', 'Audit Logs', 'API Management'],
-      email: 'admin@vista.com',
-      password: 'admin123',
     },
     {
       id: 'hr',
@@ -26,8 +24,6 @@ export default function RoleSelection() {
       color: 'from-blue-500 to-cyan-600',
       description: 'Recruitment, payroll, employee management',
       features: ['Recruitment', 'Payroll', 'Benefits', 'Compliance'],
-      email: 'hr@vista.com',
-      password: 'hr123',
     },
     {
       id: 'manager',
@@ -36,8 +32,6 @@ export default function RoleSelection() {
       color: 'from-amber-500 to-orange-600',
       description: 'Team oversight, performance, scheduling',
       features: ['Team Analytics', 'Performance Review', 'Leave Approval', 'Scheduling'],
-      email: 'manager@vista.com',
-      password: 'manager123',
     },
     {
       id: 'employee',
@@ -46,13 +40,11 @@ export default function RoleSelection() {
       color: 'from-green-500 to-emerald-600',
       description: 'Personal dashboard, leave requests, timesheets',
       features: ['Leave Management', 'Timesheet', 'Performance Goals', 'Benefits'],
-      email: 'employee@vista.com',
-      password: 'employee123',
     },
   ];
 
-  const handleQuickLogin = (email: string, password: string) => {
-    navigate('/login', { state: { email, password, autoLogin: true } });
+  const handleSelectRole = (roleId: string) => {
+    navigate('/login');
   };
 
   return (
@@ -108,7 +100,7 @@ export default function RoleSelection() {
                   <Card
                     key={role.id}
                     className="group relative overflow-hidden border border-slate-700 bg-slate-800/50 backdrop-blur hover:border-slate-600 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/20 cursor-pointer"
-                    onClick={() => handleQuickLogin(role.email, role.password)}
+                    onClick={() => handleSelectRole(role.id)}
                   >
                     {/* Gradient overlay */}
                     <div className={`absolute inset-0 bg-gradient-to-br ${gradientClass} opacity-0 group-hover:opacity-10 transition-opacity duration-300`} />
@@ -139,46 +131,30 @@ export default function RoleSelection() {
                         className={`w-full mt-4 bg-gradient-to-r ${gradientClass} text-white border-0 group-hover:shadow-lg group-hover:shadow-blue-500/50 transition-all duration-300`}
                         onClick={(e) => {
                           e.stopPropagation();
-                          handleQuickLogin(role.email, role.password);
+                          handleSelectRole(role.id);
                         }}
                       >
-                        Login as {role.title}
+                        Continue as {role.title}
                         <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
                       </Button>
-
-                      <div className="pt-2 border-t border-slate-700">
-                        <p className="text-xs text-slate-500">
-                          <strong>{role.email}</strong>
-                        </p>
-                        <p className="text-xs text-slate-500">
-                          Pass: <code className="text-slate-400">{role.password}</code>
-                        </p>
-                      </div>
                     </CardContent>
                   </Card>
                 );
               })}
             </div>
 
-            {/* Quick Info Section */}
+            {/* Professional Features Section */}
             <Card className="border border-slate-700 bg-slate-800/50 backdrop-blur">
               <CardHeader>
-                <CardTitle className="text-lg text-white">Demo Credentials</CardTitle>
+                <CardTitle className="text-lg text-white">Enterprise Features</CardTitle>
+                <CardDescription className="text-slate-400">
+                  A comprehensive HR management solution built for modern organizations
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="grid md:grid-cols-2 gap-6">
                   <div className="space-y-3">
-                    <h4 className="font-semibold text-white text-sm">Default Accounts</h4>
-                    {roles.map((role) => (
-                      <div key={role.id} className="text-xs text-slate-400 bg-slate-900/50 p-2 rounded border border-slate-700">
-                        <p><strong className="text-slate-200">{role.title}:</strong></p>
-                        <p>Email: {role.email}</p>
-                        <p>Password: {role.password}</p>
-                      </div>
-                    ))}
-                  </div>
-                  <div className="space-y-3">
-                    <h4 className="font-semibold text-white text-sm">Features Included</h4>
+                    <h4 className="font-semibold text-white text-sm">Platform Capabilities</h4>
                     <ul className="space-y-2 text-xs text-slate-400">
                       <li className="flex items-center gap-2">
                         <CheckCircle className="h-4 w-4 text-emerald-500 flex-shrink-0" />
@@ -202,7 +178,36 @@ export default function RoleSelection() {
                       </li>
                       <li className="flex items-center gap-2">
                         <CheckCircle className="h-4 w-4 text-emerald-500 flex-shrink-0" />
-                        <span>Complete API</span>
+                        <span>Complete REST API</span>
+                      </li>
+                    </ul>
+                  </div>
+                  <div className="space-y-3">
+                    <h4 className="font-semibold text-white text-sm">Security & Compliance</h4>
+                    <ul className="space-y-2 text-xs text-slate-400">
+                      <li className="flex items-center gap-2">
+                        <CheckCircle className="h-4 w-4 text-emerald-500 flex-shrink-0" />
+                        <span>JWT Authentication</span>
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <CheckCircle className="h-4 w-4 text-emerald-500 flex-shrink-0" />
+                        <span>Audit Logging</span>
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <CheckCircle className="h-4 w-4 text-emerald-500 flex-shrink-0" />
+                        <span>Data Encryption</span>
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <CheckCircle className="h-4 w-4 text-emerald-500 flex-shrink-0" />
+                        <span>Access Control Lists</span>
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <CheckCircle className="h-4 w-4 text-emerald-500 flex-shrink-0" />
+                        <span>Multi-Tenant Support</span>
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <CheckCircle className="h-4 w-4 text-emerald-500 flex-shrink-0" />
+                        <span>GDPR Compliance</span>
                       </li>
                     </ul>
                   </div>

@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { supabase } from '../config/supabase.js';
 import { authenticateToken, requireRole } from '../middleware/auth.js';
+import { mockDataService } from '../services/mockDataService.js';
 
 const router = Router();
 
@@ -10,9 +11,18 @@ router.get('/', authenticateToken, async (req, res, next) => {
     let query = supabase.from('candidates').select('*');
     if (jobId) query = query.eq('job_id', jobId);
     const { data, error } = await query.order('created_at', { ascending: false });
-    if (error) throw error;
+    
+    if (error || !data) {
+      if (process.env.NODE_ENV === 'development') {
+        return res.json(mockDataService.getCandidates());
+      }
+      throw error;
+    }
     res.json(data);
   } catch (error) {
+    if (process.env.NODE_ENV === 'development') {
+      return res.json(mockDataService.getCandidates());
+    }
     next(error);
   }
 });
@@ -24,9 +34,22 @@ router.get('/:id', authenticateToken, async (req, res, next) => {
       .select('*')
       .eq('id', req.params.id)
       .single();
-    if (error) throw error;
+    
+    if (error || !data) {
+      if (process.env.NODE_ENV === 'development') {
+        const mockData = mockDataService.getCandidate(req.params.id);
+        if (mockData) return res.json(mockData);
+        return res.status(404).json({ error: 'Candidate not found' });
+      }
+      throw error;
+    }
     res.json(data);
   } catch (error) {
+    if (process.env.NODE_ENV === 'development') {
+      const mockData = mockDataService.getCandidate(req.params.id);
+      if (mockData) return res.json(mockData);
+      return res.status(404).json({ error: 'Candidate not found' });
+    }
     next(error);
   }
 });

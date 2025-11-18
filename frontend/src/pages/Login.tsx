@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -10,29 +10,17 @@ import { useToast } from '@/hooks/use-toast';
 
 export default function Login() {
   const navigate = useNavigate();
-  const location = useLocation();
   const { login } = useAuth();
   const { toast } = useToast();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  const autoLoginEmail = location.state?.email;
-  const autoLoginPassword = location.state?.password;
-  const autoLogin = location.state?.autoLogin;
-
-  // Auto-login if credentials are provided from role selection
-  useEffect(() => {
-    if (autoLogin && autoLoginEmail && autoLoginPassword) {
-      setEmail(autoLoginEmail);
-      setPassword(autoLoginPassword);
-      handleAutoLogin(autoLoginEmail, autoLoginPassword);
-    }
-  }, []);
-
-  const handleAutoLogin = async (emailVal: string, passwordVal: string) => {
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
     setIsLoading(true);
-    const success = await login(emailVal, passwordVal);
+    
+    const success = await login(email, password);
     
     if (success) {
       toast({
@@ -43,24 +31,12 @@ export default function Login() {
     } else {
       toast({
         title: 'Login failed',
-        description: 'Invalid credentials.',
+        description: 'Invalid email or password. Please try again.',
         variant: 'destructive',
       });
     }
     setIsLoading(false);
   };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    await handleAutoLogin(email, password);
-  };
-
-  const quickLogins = [
-    { email: 'admin@vista.com', password: 'admin123', role: 'Admin' },
-    { email: 'hr@vista.com', password: 'hr123', role: 'HR' },
-    { email: 'manager@vista.com', password: 'manager123', role: 'Manager' },
-    { email: 'employee@vista.com', password: 'employee123', role: 'Employee' },
-  ];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center p-4">
@@ -116,38 +92,21 @@ export default function Login() {
                     className="bg-slate-700 border-slate-600 text-white placeholder:text-slate-500"
                   />
                 </div>
-                <Button
-                  type="submit"
-                  className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white border-0 hover:opacity-90"
-                  disabled={isLoading}
-                >
-                  {isLoading ? 'Logging in...' : 'Login'}
-                </Button>
-              </form>
-            )}
-
-            {!isLoading && (
-              <div className="mt-6">
-                <p className="text-sm text-slate-400 text-center mb-3">
-                  Quick login (demo credentials):
-                </p>
-                <div className="grid grid-cols-2 gap-2">
-                  {quickLogins.map((account) => (
+                {!isLoading && (
+                  <>
                     <Button
-                      key={account.role}
-                      variant="outline"
-                      size="sm"
-                      onClick={() => {
-                        setEmail(account.email);
-                        setPassword(account.password);
-                      }}
-                      className="text-xs border-slate-600 hover:bg-slate-700"
+                      type="submit"
+                      className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white border-0 hover:opacity-90"
+                      disabled={isLoading}
                     >
-                      {account.role}
+                      {isLoading ? 'Logging in...' : 'Login'}
                     </Button>
-                  ))}
-                </div>
-              </div>
+                    <p className="text-sm text-slate-400 text-center mt-4">
+                      Don't have an account? Contact your administrator.
+                    </p>
+                  </>
+                )}
+              </form>
             )}
           </CardContent>
         </Card>

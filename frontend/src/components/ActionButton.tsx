@@ -1,7 +1,21 @@
 import React from 'react';
 import { Button, ButtonProps } from '@/components/ui/button';
-import { actionHandlers } from '@/lib/actionHandlers';
+import { interviewActions, documentActions, leaveActions, employeeActions, candidateActions, payrollActions, attendanceActions, aiActions, commonActions, fileActions } from '../lib/actionHandlers';
 import { Loader } from 'lucide-react';
+
+// Create actionHandlers object from all action groups
+const actionHandlers = {
+  ...interviewActions,
+  ...documentActions,
+  ...leaveActions,
+  ...employeeActions,
+  ...candidateActions,
+  ...payrollActions,
+  ...attendanceActions,
+  ...aiActions,
+  ...commonActions,
+  ...fileActions,
+};
 
 interface ActionButtonProps extends ButtonProps {
   action: keyof typeof actionHandlers;

@@ -1,557 +1,537 @@
-import { toast } from 'sonner';
-import * as BusinessLogic from './businessLogic';
-
 /**
- * Unified Action Handlers for all buttons across the application
- * This provides standardized handler functions for common HR actions
+ * Comprehensive action handlers for all button functions
+ * This file contains all business logic for button clicks across the application
  */
 
-export const actionHandlers = {
-  // ====================
-  // ATTENDANCE ACTIONS
-  // ====================
-  async handleClockIn(employeeId: string) {
+import { interviewService, documentService, fileService, payrollService, leaveService, employeeService, candidateService, attendanceService, aiService } from './api';
+
+// Interview Scheduling Actions
+export const interviewActions = {
+  async scheduleInterview(data: any) {
     try {
-      await BusinessLogic.attendanceUtils.clockIn(employeeId);
-      return true;
-    } catch (error) {
-      console.error('Clock in error:', error);
-      return false;
+      const interview = await interviewService.scheduleInterview(data);
+      console.log('Interview scheduled:', interview);
+      return interview;
+    } catch (error: any) {
+      console.error('Failed to schedule interview:', error);
+      throw error;
     }
   },
 
-  async handleClockOut(attendanceId: string) {
+  async rescheduleInterview(interviewId: string, newDate: string, newTime: string) {
     try {
-      await BusinessLogic.attendanceUtils.clockOut(attendanceId);
-      return true;
-    } catch (error) {
-      console.error('Clock out error:', error);
-      return false;
+      const interview = await interviewService.rescheduleInterview(interviewId, newDate, newTime);
+      return interview;
+    } catch (error: any) {
+      console.error('Failed to reschedule interview:', error);
+      throw error;
     }
   },
 
-  async handleViewAttendanceReport(employeeId: string, startDate: string, endDate: string) {
+  async cancelInterview(interviewId: string, reason?: string) {
     try {
-      const data = await BusinessLogic.attendanceUtils.getAttendanceReport(employeeId, startDate, endDate);
-      return data;
-    } catch (error) {
-      console.error('Attendance report error:', error);
-      return null;
+      const interview = await interviewService.cancelInterview(interviewId, reason);
+      return interview;
+    } catch (error: any) {
+      console.error('Failed to cancel interview:', error);
+      throw error;
     }
   },
 
-  // ====================
-  // LEAVE ACTIONS
-  // ====================
-  async handleRequestLeave(employeeId: string, startDate: string, endDate: string, reason: string, type: string) {
+  async updateInterviewStatus(interviewId: string, status: string, result?: string) {
     try {
-      await BusinessLogic.leaveUtils.requestLeave(employeeId, startDate, endDate, reason, type);
-      return true;
-    } catch (error) {
-      console.error('Leave request error:', error);
-      return false;
+      const interview = await interviewService.updateInterviewStatus(interviewId, status, result);
+      return interview;
+    } catch (error: any) {
+      console.error('Failed to update interview:', error);
+      throw error;
     }
   },
 
-  async handleApproveLeave(leaveId: string, approverId: string) {
+  async addFeedback(interviewId: string, feedback: any) {
     try {
-      await BusinessLogic.leaveUtils.approveLeave(leaveId, approverId);
-      return true;
-    } catch (error) {
-      console.error('Leave approval error:', error);
-      return false;
-    }
-  },
-
-  async handleRejectLeave(leaveId: string, approverId: string, reason: string) {
-    try {
-      await BusinessLogic.leaveUtils.rejectLeave(leaveId, approverId, reason);
-      return true;
-    } catch (error) {
-      console.error('Leave rejection error:', error);
-      return false;
-    }
-  },
-
-  // ====================
-  // EMPLOYEE ACTIONS
-  // ====================
-  async handleCreateEmployee(employeeData: any) {
-    try {
-      const result = await BusinessLogic.employeeUtils.createEmployee(employeeData);
+      const result = await interviewService.addFeedback(interviewId, feedback);
       return result;
-    } catch (error) {
-      console.error('Create employee error:', error);
-      return null;
+    } catch (error: any) {
+      console.error('Failed to add feedback:', error);
+      throw error;
     }
   },
 
-  async handleUpdateEmployee(employeeId: string, updates: any) {
+  async getUpcomingInterviews() {
     try {
-      const result = await BusinessLogic.employeeUtils.updateEmployee(employeeId, updates);
-      return result;
-    } catch (error) {
-      console.error('Update employee error:', error);
-      return null;
+      const interviews = await interviewService.getUpcomingInterviews();
+      return interviews;
+    } catch (error: any) {
+      console.error('Failed to get interviews:', error);
+      throw error;
     }
-  },
-
-  async handleDeleteEmployee(employeeId: string) {
-    if (!confirm('Are you sure you want to delete this employee?')) {
-      return false;
-    }
-    try {
-      // Call delete endpoint
-      await fetch(`http://localhost:3001/api/employees/${employeeId}`, {
-        method: 'DELETE',
-      });
-      toast.success('Employee deleted successfully');
-      return true;
-    } catch (error) {
-      console.error('Delete employee error:', error);
-      toast.error('Failed to delete employee');
-      return false;
-    }
-  },
-
-  async handleViewEmployeeProfile(employeeId: string) {
-    try {
-      const profile = await BusinessLogic.employeeUtils.getEmployeeProfile(employeeId);
-      return profile;
-    } catch (error) {
-      console.error('Get profile error:', error);
-      return null;
-    }
-  },
-
-  async handleViewTeamMembers(managerId: string) {
-    try {
-      const team = await BusinessLogic.employeeUtils.getTeamMembers(managerId);
-      return team;
-    } catch (error) {
-      console.error('Get team error:', error);
-      return null;
-    }
-  },
-
-  // ====================
-  // RECRUITMENT ACTIONS
-  // ====================
-  async handleUploadResume(formData: FormData) {
-    try {
-      const result = await BusinessLogic.recruitmentUtils.uploadResume(formData);
-      return result;
-    } catch (error) {
-      console.error('Resume upload error:', error);
-      return null;
-    }
-  },
-
-  async handleScreenResume(resumeText: string, jobRequirements: string) {
-    try {
-      const result = await BusinessLogic.recruitmentUtils.screenResume(resumeText, jobRequirements);
-      return result;
-    } catch (error) {
-      console.error('Resume screening error:', error);
-      return null;
-    }
-  },
-
-  async handleScheduleInterview(candidateId: string, interviewData: any) {
-    try {
-      const result = await BusinessLogic.recruitmentUtils.scheduleInterview(candidateId, interviewData);
-      return result;
-    } catch (error) {
-      console.error('Schedule interview error:', error);
-      return null;
-    }
-  },
-
-  // ====================
-  // PAYROLL ACTIONS
-  // ====================
-  async handleGeneratePayslip(employeeId: string, month: string, year: string) {
-    try {
-      const payslip = await BusinessLogic.payrollUtils.generatePayslip(employeeId, month, year);
-      return payslip;
-    } catch (error) {
-      console.error('Generate payslip error:', error);
-      return null;
-    }
-  },
-
-  async handleProcessBulkPayroll(payrollData: any[]) {
-    try {
-      const result = await BusinessLogic.payrollUtils.processBulkPayroll(payrollData);
-      return result;
-    } catch (error) {
-      console.error('Process payroll error:', error);
-      return null;
-    }
-  },
-
-  async handleCalculateTax(employeeId: string, annualSalary: number) {
-    try {
-      const taxInfo = await BusinessLogic.payrollUtils.getTaxCalculations(employeeId, annualSalary);
-      return taxInfo;
-    } catch (error) {
-      console.error('Calculate tax error:', error);
-      return null;
-    }
-  },
-
-  // ====================
-  // PERFORMANCE ACTIONS
-  // ====================
-  async handleSubmitPerformanceReview(employeeId: string, reviewData: any) {
-    try {
-      const result = await BusinessLogic.performanceUtils.submitPerformanceReview(employeeId, reviewData);
-      return result;
-    } catch (error) {
-      console.error('Submit review error:', error);
-      return null;
-    }
-  },
-
-  async handleGetPerformanceMetrics(employeeId: string) {
-    try {
-      const metrics = await BusinessLogic.performanceUtils.getPerformanceMetrics(employeeId);
-      return metrics;
-    } catch (error) {
-      console.error('Get metrics error:', error);
-      return null;
-    }
-  },
-
-  async handleGeneratePerformanceReport(departmentId: string, period: string) {
-    try {
-      const report = await BusinessLogic.performanceUtils.generatePerformanceReport(departmentId, period);
-      return report;
-    } catch (error) {
-      console.error('Generate report error:', error);
-      return null;
-    }
-  },
-
-  // ====================
-  // TRAINING ACTIONS
-  // ====================
-  async handleEnrollCourse(employeeId: string, courseId: string) {
-    try {
-      const enrollment = await BusinessLogic.trainingUtils.enrollInCourse(employeeId, courseId);
-      return enrollment;
-    } catch (error) {
-      console.error('Enroll course error:', error);
-      return null;
-    }
-  },
-
-  async handleCompleteCourse(enrollmentId: string) {
-    try {
-      const result = await BusinessLogic.trainingUtils.completeCourse(enrollmentId);
-      return result;
-    } catch (error) {
-      console.error('Complete course error:', error);
-      return null;
-    }
-  },
-
-  // ====================
-  // USER MANAGEMENT ACTIONS
-  // ====================
-  async handleCreateUser(userData: any) {
-    try {
-      const result = await BusinessLogic.userUtils.createUser(userData);
-      return result;
-    } catch (error) {
-      console.error('Create user error:', error);
-      return null;
-    }
-  },
-
-  async handleUpdateUser(userId: string, updates: any) {
-    try {
-      const result = await BusinessLogic.userUtils.updateUser(userId, updates);
-      return result;
-    } catch (error) {
-      console.error('Update user error:', error);
-      return null;
-    }
-  },
-
-  async handleDeleteUser(userId: string) {
-    if (!confirm('Are you sure you want to delete this user?')) {
-      return false;
-    }
-    try {
-      await BusinessLogic.userUtils.deleteUser(userId);
-      return true;
-    } catch (error) {
-      console.error('Delete user error:', error);
-      return false;
-    }
-  },
-
-  async handleResetPassword(userId: string, newPassword: string) {
-    try {
-      const result = await BusinessLogic.userUtils.resetPassword(userId, newPassword);
-      return result;
-    } catch (error) {
-      console.error('Reset password error:', error);
-      return null;
-    }
-  },
-
-  // ====================
-  // ORGANIZATION ACTIONS
-  // ====================
-  async handleCreateDepartment(departmentData: any) {
-    try {
-      const result = await BusinessLogic.organizationUtils.createDepartment(departmentData);
-      return result;
-    } catch (error) {
-      console.error('Create department error:', error);
-      return null;
-    }
-  },
-
-  async handleUpdateDepartment(departmentId: string, updates: any) {
-    try {
-      const result = await BusinessLogic.organizationUtils.updateDepartment(departmentId, updates);
-      return result;
-    } catch (error) {
-      console.error('Update department error:', error);
-      return null;
-    }
-  },
-
-  async handleGetDepartments() {
-    try {
-      const departments = await BusinessLogic.organizationUtils.getDepartments();
-      return departments;
-    } catch (error) {
-      console.error('Get departments error:', error);
-      return null;
-    }
-  },
-
-  // ====================
-  // JOB MANAGEMENT ACTIONS
-  // ====================
-  async handlePostJob(jobData: any) {
-    try {
-      const result = await BusinessLogic.jobUtils.postJob(jobData);
-      return result;
-    } catch (error) {
-      console.error('Post job error:', error);
-      return null;
-    }
-  },
-
-  async handleCloseJob(jobId: string) {
-    if (!confirm('Are you sure you want to close this job posting?')) {
-      return false;
-    }
-    try {
-      await BusinessLogic.jobUtils.closeJob(jobId);
-      return true;
-    } catch (error) {
-      console.error('Close job error:', error);
-      return false;
-    }
-  },
-
-  async handleGetJobApplications(jobId: string) {
-    try {
-      const applications = await BusinessLogic.jobUtils.getJobApplications(jobId);
-      return applications;
-    } catch (error) {
-      console.error('Get applications error:', error);
-      return null;
-    }
-  },
-
-  // ====================
-  // GOALS & RECOGNITION ACTIONS
-  // ====================
-  async handleSetGoal(employeeId: string, goalData: any) {
-    try {
-      const result = await BusinessLogic.goalsUtils.setGoal(employeeId, goalData);
-      return result;
-    } catch (error) {
-      console.error('Set goal error:', error);
-      return null;
-    }
-  },
-
-  async handleUpdateGoal(goalId: string, updates: any) {
-    try {
-      const result = await BusinessLogic.goalsUtils.updateGoal(goalId, updates);
-      return result;
-    } catch (error) {
-      console.error('Update goal error:', error);
-      return null;
-    }
-  },
-
-  async handleRecognizeEmployee(employeeId: string, recognitionData: any) {
-    try {
-      const result = await BusinessLogic.goalsUtils.recognizeEmployee(employeeId, recognitionData);
-      return result;
-    } catch (error) {
-      console.error('Recognize employee error:', error);
-      return null;
-    }
-  },
-
-  // ====================
-  // REPORTING ACTIONS
-  // ====================
-  async handleGenerateReport(filters: any) {
-    try {
-      const report = await BusinessLogic.reportingUtils.generateCustomReport(filters);
-      return report;
-    } catch (error) {
-      console.error('Generate report error:', error);
-      return null;
-    }
-  },
-
-  async handleExportReport(reportId: string, format: 'csv' | 'pdf' | 'xlsx') {
-    try {
-      const blob = await BusinessLogic.reportingUtils.exportReport(reportId, format);
-      // Download the file
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = `report.${format}`;
-      link.click();
-      window.URL.revokeObjectURL(url);
-      toast.success(`Report exported as ${format.toUpperCase()}`);
-      return true;
-    } catch (error) {
-      console.error('Export report error:', error);
-      toast.error('Failed to export report');
-      return false;
-    }
-  },
-
-  async handleGetDashboardMetrics(role: any) {
-    try {
-      const metrics = await BusinessLogic.reportingUtils.getDashboardMetrics(role);
-      return metrics;
-    } catch (error) {
-      console.error('Get metrics error:', error);
-      return null;
-    }
-  },
-
-  // ====================
-  // COMMON ACTIONS
-  // ====================
-  async handleExport(data: any[], filename: string, format: 'csv' | 'json' = 'csv') {
-    try {
-      if (format === 'csv') {
-        const csv = this.convertToCSV(data);
-        this.downloadFile(csv, `${filename}.csv`, 'text/csv');
-      } else {
-        const json = JSON.stringify(data, null, 2);
-        this.downloadFile(json, `${filename}.json`, 'application/json');
-      }
-      toast.success(`Data exported as ${format.toUpperCase()}`);
-      return true;
-    } catch (error) {
-      console.error('Export error:', error);
-      toast.error('Failed to export data');
-      return false;
-    }
-  },
-
-  async handleImport(file: File): Promise<any[]> {
-    try {
-      const text = await file.text();
-      if (file.name.endsWith('.csv')) {
-        return this.parseCSV(text);
-      } else if (file.name.endsWith('.json')) {
-        return JSON.parse(text);
-      }
-      throw new Error('Unsupported file format');
-    } catch (error) {
-      console.error('Import error:', error);
-      toast.error('Failed to import file');
-      return [];
-    }
-  },
-
-  // ====================
-  // UTILITY FUNCTIONS
-  // ====================
-  convertToCSV(data: any[]): string {
-    if (!data.length) return '';
-    const headers = Object.keys(data[0]);
-    const csv = [headers.join(',')];
-    data.forEach((row) => {
-      csv.push(headers.map((header) => JSON.stringify(row[header] || '')).join(','));
-    });
-    return csv.join('\n');
-  },
-
-  parseCSV(csv: string): any[] {
-    const lines = csv.trim().split('\n');
-    const headers = lines[0].split(',');
-    return lines.slice(1).map((line) => {
-      const obj: any = {};
-      const values = line.split(',');
-      headers.forEach((header, index) => {
-        obj[header.trim()] = values[index]?.trim().replace(/^"|"$/g, '');
-      });
-      return obj;
-    });
-  },
-
-  downloadFile(content: string, filename: string, type: string) {
-    const blob = new Blob([content], { type });
-    const url = window.URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = filename;
-    link.click();
-    window.URL.revokeObjectURL(url);
-  },
-
-  // ====================
-  // DIALOG HANDLERS
-  // ====================
-  handleOpenDialog(dialogId: string) {
-    const dialog = document.getElementById(dialogId) as any;
-    if (dialog?.showModal) {
-      dialog.showModal();
-    }
-  },
-
-  handleCloseDialog(dialogId: string) {
-    const dialog = document.getElementById(dialogId) as any;
-    if (dialog?.close) {
-      dialog.close();
-    }
-  },
-
-  // ====================
-  // CONFIRMATION HANDLERS
-  // ====================
-  async handleDelete(itemName: string, onConfirm: () => Promise<boolean>): Promise<boolean> {
-    if (confirm(`Are you sure you want to delete this ${itemName}?`)) {
-      return await onConfirm();
-    }
-    return false;
-  },
-
-  async handleConfirmAction(message: string, onConfirm: () => Promise<boolean>): Promise<boolean> {
-    if (confirm(message)) {
-      return await onConfirm();
-    }
-    return false;
   },
 };
 
-export default actionHandlers;
+// Document Download Actions
+export const documentActions = {
+  async downloadSalarySlip(userId: string, month: number, year: number) {
+    try {
+      await documentService.downloadSalarySlip(userId, month, year);
+    } catch (error: any) {
+      console.error('Failed to download salary slip:', error);
+      throw error;
+    }
+  },
+
+  async downloadResume(candidateId: string) {
+    try {
+      await documentService.downloadResume(candidateId);
+    } catch (error: any) {
+      console.error('Failed to download resume:', error);
+      throw error;
+    }
+  },
+
+  async downloadAttendanceReport(userId?: string, startDate?: string, endDate?: string) {
+    try {
+      await documentService.downloadAttendanceReport(userId, startDate, endDate);
+    } catch (error: any) {
+      console.error('Failed to download attendance report:', error);
+      throw error;
+    }
+  },
+
+  async downloadEmployeeReport(departmentId?: string) {
+    try {
+      await documentService.downloadEmployeeReport(departmentId);
+    } catch (error: any) {
+      console.error('Failed to download employee report:', error);
+      throw error;
+    }
+  },
+
+  async downloadLeaveReport(userId?: string) {
+    try {
+      await documentService.downloadLeaveReport(userId);
+    } catch (error: any) {
+      console.error('Failed to download leave report:', error);
+      throw error;
+    }
+  },
+
+  async downloadPerformanceReport(userId?: string, departmentId?: string) {
+    try {
+      await documentService.downloadPerformanceReport(userId, departmentId);
+    } catch (error: any) {
+      console.error('Failed to download performance report:', error);
+      throw error;
+    }
+  },
+
+  async downloadPayrollReport(month: number, year: number) {
+    try {
+      await documentService.downloadPayrollReport(month, year);
+    } catch (error: any) {
+      console.error('Failed to download payroll report:', error);
+      throw error;
+    }
+  },
+
+  async downloadRecruitmentReport(jobId?: string) {
+    try {
+      await documentService.downloadRecruitmentReport(jobId);
+    } catch (error: any) {
+      console.error('Failed to download recruitment report:', error);
+      throw error;
+    }
+  },
+};
+
+// File Upload/Download Actions
+export const fileActions = {
+  async uploadFile(file: File) {
+    try {
+      const result = await fileService.uploadFile(file);
+      return result;
+    } catch (error: any) {
+      console.error('Failed to upload file:', error);
+      throw error;
+    }
+  },
+
+  async downloadFile(filename: string) {
+    try {
+      const blob = await fileService.downloadFile(filename);
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (error: any) {
+      console.error('Failed to download file:', error);
+      throw error;
+    }
+  },
+
+  async deleteFile(filename: string) {
+    try {
+      await fileService.deleteFile(filename);
+    } catch (error: any) {
+      console.error('Failed to delete file:', error);
+      throw error;
+    }
+  },
+
+  async listFiles() {
+    try {
+      return await fileService.listFiles();
+    } catch (error: any) {
+      console.error('Failed to list files:', error);
+      throw error;
+    }
+  },
+};
+
+// Leave Management Actions
+export const leaveActions = {
+  async applyLeave(employeeId: string, leaveData: any) {
+    try {
+      const result = await leaveService.applyLeave(employeeId, leaveData);
+      return result;
+    } catch (error: any) {
+      console.error('Failed to apply leave:', error);
+      throw error;
+    }
+  },
+
+  async approveLeave(leaveId: string) {
+    try {
+      const result = await leaveService.approveLeave(leaveId);
+      return result;
+    } catch (error: any) {
+      console.error('Failed to approve leave:', error);
+      throw error;
+    }
+  },
+
+  async rejectLeave(leaveId: string, reason: string) {
+    try {
+      const result = await leaveService.rejectLeave(leaveId, reason);
+      return result;
+    } catch (error: any) {
+      console.error('Failed to reject leave:', error);
+      throw error;
+    }
+  },
+
+  async getLeaves(employeeId: string) {
+    try {
+      return await leaveService.getLeaves(employeeId);
+    } catch (error: any) {
+      console.error('Failed to fetch leaves:', error);
+      throw error;
+    }
+  },
+
+  async getPendingLeaves(managerId: string) {
+    try {
+      return await leaveService.getPendingLeaves(managerId);
+    } catch (error: any) {
+      console.error('Failed to fetch pending leaves:', error);
+      throw error;
+    }
+  },
+};
+
+// Employee Management Actions
+export const employeeActions = {
+  async getEmployees() {
+    try {
+      return await employeeService.getEmployees();
+    } catch (error: any) {
+      console.error('Failed to fetch employees:', error);
+      throw error;
+    }
+  },
+
+  async createEmployee(employeeData: any) {
+    try {
+      const result = await employeeService.createEmployee(employeeData);
+      return result;
+    } catch (error: any) {
+      console.error('Failed to create employee:', error);
+      throw error;
+    }
+  },
+
+  async updateEmployee(employeeId: string, updates: any) {
+    try {
+      const result = await employeeService.updateEmployee(employeeId, updates);
+      return result;
+    } catch (error: any) {
+      console.error('Failed to update employee:', error);
+      throw error;
+    }
+  },
+
+  async deleteEmployee(employeeId: string) {
+    try {
+      await employeeService.deleteEmployee(employeeId);
+    } catch (error: any) {
+      console.error('Failed to delete employee:', error);
+      throw error;
+    }
+  },
+
+  async getEmployeeById(employeeId: string) {
+    try {
+      return await employeeService.getEmployeeById(employeeId);
+    } catch (error: any) {
+      console.error('Failed to fetch employee:', error);
+      throw error;
+    }
+  },
+
+  async getTeamMembers(managerId: string) {
+    try {
+      return await employeeService.getTeamMembers(managerId);
+    } catch (error: any) {
+      console.error('Failed to fetch team members:', error);
+      throw error;
+    }
+  },
+};
+
+// Candidate Management Actions
+export const candidateActions = {
+  async getCandidates(jobId?: string) {
+    try {
+      return await candidateService.getCandidates(jobId);
+    } catch (error: any) {
+      console.error('Failed to fetch candidates:', error);
+      throw error;
+    }
+  },
+
+  async createCandidate(candidateData: any) {
+    try {
+      const result = await candidateService.createCandidate(candidateData);
+      return result;
+    } catch (error: any) {
+      console.error('Failed to create candidate:', error);
+      throw error;
+    }
+  },
+
+  async updateCandidate(candidateId: string, updates: any) {
+    try {
+      const result = await candidateService.updateCandidate(candidateId, updates);
+      return result;
+    } catch (error: any) {
+      console.error('Failed to update candidate:', error);
+      throw error;
+    }
+  },
+
+  async uploadResume(candidateId: string, file: File) {
+    try {
+      const result = await candidateService.uploadResume(candidateId, file);
+      return result;
+    } catch (error: any) {
+      console.error('Failed to upload resume:', error);
+      throw error;
+    }
+  },
+
+  async getCandidateById(candidateId: string) {
+    try {
+      return await candidateService.getCandidateById(candidateId);
+    } catch (error: any) {
+      console.error('Failed to fetch candidate:', error);
+      throw error;
+    }
+  },
+};
+
+// Payroll Actions
+export const payrollActions = {
+  async getPayrollData(userId: string) {
+    try {
+      return await payrollService.getPayroll(userId);
+    } catch (error: any) {
+      console.error('Failed to fetch payroll:', error);
+      throw error;
+    }
+  },
+
+  async getPayslip(userId: string, month: number, year: number) {
+    try {
+      return await payrollService.generatePayslip(userId, month, year);
+    } catch (error: any) {
+      console.error('Failed to fetch payslip:', error);
+      throw error;
+    }
+  },
+
+  async processPayroll(month: number, year: number) {
+    try {
+      const result = await payrollService.calculatePayroll('', month, year);
+      return result;
+    } catch (error: any) {
+      console.error('Failed to process payroll:', error);
+      throw error;
+    }
+  },
+
+  async getPayrollSummary(filters?: any) {
+    try {
+      return await payrollService.getPayroll();
+    } catch (error: any) {
+      console.error('Failed to fetch payroll summary:', error);
+      throw error;
+    }
+  },
+};
+
+// Attendance Actions
+export const attendanceActions = {
+  async clockIn(employeeId: string) {
+    try {
+      return await attendanceService.clockIn(employeeId);
+    } catch (error: any) {
+      console.error('Failed to clock in:', error);
+      throw error;
+    }
+  },
+
+  async clockOut(attendanceId: string) {
+    try {
+      return await attendanceService.clockOut(attendanceId);
+    } catch (error: any) {
+      console.error('Failed to clock out:', error);
+      throw error;
+    }
+  },
+
+  async getAttendance(employeeId: string, startDate: string, endDate: string) {
+    try {
+      return await attendanceService.getAttendance(employeeId, startDate, endDate);
+    } catch (error: any) {
+      console.error('Failed to fetch attendance:', error);
+      throw error;
+    }
+  },
+
+  async markAttendance(employeeId: string, date: string, status: string) {
+    try {
+      return await attendanceService.markAttendance(employeeId, date, status);
+    } catch (error: any) {
+      console.error('Failed to mark attendance:', error);
+      throw error;
+    }
+  },
+};
+
+// AI Actions
+export const aiActions = {
+  async getAIResponse(query: string) {
+    try {
+      return await aiService.hrChat(query);
+    } catch (error: any) {
+      console.error('Failed to get AI response:', error);
+      throw error;
+    }
+  },
+
+  async analyzeData(data: any, analysisType: string) {
+    try {
+      return await aiService.analyzePerformance(data);
+    } catch (error: any) {
+      console.error('Failed to analyze data:', error);
+      throw error;
+    }
+  },
+
+  async generateReport(reportType: string, filters?: any) {
+    try {
+      return await aiService.nlpQuery(`Generate ${reportType} report`);
+    } catch (error: any) {
+      console.error('Failed to generate report:', error);
+      throw error;
+    }
+  },
+};
+
+// Generic action handler for common operations
+export const commonActions = {
+  async handleDelete(id: string, itemType: string, deleteFunction: (id: string) => Promise<void>) {
+    if (!window.confirm(`Are you sure you want to delete this ${itemType}?`)) {
+      return false;
+    }
+
+    try {
+      await deleteFunction(id);
+      return true;
+    } catch (error: any) {
+      console.error(`Failed to delete ${itemType}:`, error);
+      return false;
+    }
+  },
+
+  async handleExport(data: any[], filename: string) {
+    try {
+      const csv = this.convertToCSV(data);
+      const element = document.createElement('a');
+      element.setAttribute('href', 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv));
+      element.setAttribute('download', filename);
+      document.body.appendChild(element);
+      element.click();
+      document.body.removeChild(element);
+      return true;
+    } catch (error: any) {
+      console.error('Failed to export data:', error);
+      return false;
+    }
+  },
+
+  convertToCSV(data: any[]): string {
+    if (data.length === 0) return '';
+
+    const keys = Object.keys(data[0]);
+    const csv = [keys.join(',')];
+
+    data.forEach((item: any) => {
+      const values = keys.map((key) => {
+        const value = item[key];
+        if (typeof value === 'string' && value.includes(',')) {
+          return `"${value}"`;
+        }
+        return value;
+      });
+      csv.push(values.join(','));
+    });
+
+    return csv.join('\n');
+  },
+
+  formatDate(date: Date | string): string {
+    if (typeof date === 'string') date = new Date(date);
+    return date.toISOString().split('T')[0];
+  },
+
+  formatTime(date: Date | string): string {
+    if (typeof date === 'string') date = new Date(date);
+    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  },
+};
+
+export default {
+  interviewActions,
+  documentActions,
+  fileActions,
+  leaveActions,
+  employeeActions,
+  candidateActions,
+  payrollActions,
+  attendanceActions,
+  aiActions,
+  commonActions,
+};

@@ -14,6 +14,9 @@ import jobRoutes from './routes/jobs.js';
 import candidateRoutes from './routes/candidates.js';
 import payrollRoutes from './routes/payroll.js';
 import aiRoutes from './routes/ai.js';
+import uploadsRoutes from './routes/uploads.js';
+import interviewRoutes from './routes/interviews.js';
+import documentsRoutes from './routes/documents.js';
 
 const app = express();
 
@@ -54,7 +57,8 @@ app.get('/', (req, res) => {
       jobs: '/api/jobs (job postings)',
       candidates: '/api/candidates (recruitment)',
       payroll: '/api/payroll (payroll, performance, training)',
-      ai: '/api/ai (AI features)'
+      ai: '/api/ai (AI features)',
+      uploads: '/api/uploads (file upload/download)',
     }
   });
 });
@@ -68,6 +72,9 @@ app.use('/api/jobs', jobRoutes);
 app.use('/api/candidates', candidateRoutes);
 app.use('/api/payroll', payrollRoutes);
 app.use('/api/ai', aiRoutes);
+app.use('/api/uploads', uploadsRoutes);
+app.use('/api/interviews', interviewRoutes);
+app.use('/api/documents', documentsRoutes);
 
 app.use((req, res) => {
   res.status(404).json({ error: 'Route not found' });
@@ -77,10 +84,21 @@ app.use(errorHandler);
 
 const PORT = config.server.port;
 
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   logger.info(`🚀 Server running on http://localhost:${PORT}`);
   logger.info(`📝 Frontend URL: ${config.server.frontendUrl}`);
   logger.info(`🔒 Environment: ${config.server.nodeEnv}`);
+});
+
+// Handle unhandled rejections
+process.on('unhandledRejection', (reason: any) => {
+  logger.error('Unhandled Rejection:', reason);
+});
+
+// Handle uncaught exceptions
+process.on('uncaughtException', (error: any) => {
+  logger.error('Uncaught Exception:', error);
+  process.exit(1);
 });
 
 export default app;

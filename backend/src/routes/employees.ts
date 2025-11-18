@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { supabase } from '../config/supabase.js';
 import { authenticateToken, requireRole } from '../middleware/auth.js';
+import { mockDataService } from '../services/mockDataService.js';
 
 const router = Router();
 
@@ -9,9 +10,20 @@ router.get('/', authenticateToken, async (req, res, next) => {
     const { data, error } = await supabase
       .from('employees')
       .select('*, users(*)');
-    if (error) throw error;
+    
+    // Fallback to mock data in development if database fails
+    if (error || !data) {
+      if (process.env.NODE_ENV === 'development') {
+        return res.json(mockDataService.getEmployees());
+      }
+      throw error;
+    }
     res.json(data);
   } catch (error) {
+    // Development fallback
+    if (process.env.NODE_ENV === 'development') {
+      return res.json(mockDataService.getEmployees());
+    }
     next(error);
   }
 });
@@ -23,9 +35,24 @@ router.get('/:id', authenticateToken, async (req, res, next) => {
       .select('*, users(*)')
       .eq('id', req.params.id)
       .single();
-    if (error) throw error;
+    
+    // Fallback to mock data in development
+    if (error || !data) {
+      if (process.env.NODE_ENV === 'development') {
+        const mockData = mockDataService.getEmployee(req.params.id);
+        if (mockData) return res.json(mockData);
+        return res.status(404).json({ error: 'Employee not found' });
+      }
+      throw error;
+    }
     res.json(data);
   } catch (error) {
+    // Development fallback
+    if (process.env.NODE_ENV === 'development') {
+      const mockData = mockDataService.getEmployee(req.params.id);
+      if (mockData) return res.json(mockData);
+      return res.status(404).json({ error: 'Employee not found' });
+    }
     next(error);
   }
 });
