@@ -1,0 +1,62 @@
+#root {
+  width: 100%;
+  margin: 0 auto;
+  padding: 0;
+}
+
+.bg-gradient-hero {
+  background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
+}
+
+.bg-gradient-ai {
+  background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
+}
+
+.text-gradient-hero {
+  background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gradient-ai {
+  background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
+}
+
+.gradient-hero {
+  background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+}
+
+/* Tailwind gradient support */
+@layer components {
+  .gradient-hero {
+    @apply from-blue-500 to-cyan-500;
+  }
+
+  .gradient-ai {
+    @apply from-violet-500 to-indigo-500;
+  }
+}
