@@ -802,6 +802,63 @@ Proprietary - Vista AI HR Suite
 
 ---
 
+## 📸 Screenshots & UI Preview
+
+### Dashboard & Main Pages
+
+**1. Login Page**
+![Login Page](screenshots/capture_1763615504725.png)
+
+**2. Role Selection**
+![Role Selection](screenshots/capture_1763615513080.png)
+
+**3. Admin Dashboard**
+![Admin Dashboard](screenshots/capture_1763615517825.png)
+
+**4. Employee List**
+![Employee List](screenshots/capture_1763615522418.png)
+
+**5. User Management**
+![User Management](screenshots/capture_1763615556431.png)
+
+**6. Attendance Tracking**
+![Attendance Tracking](screenshots/capture_1763615563008.png)
+
+**7. Leave Management**
+![Leave Management](screenshots/capture_1763615571003.png)
+
+**8. Payroll System**
+![Payroll System](screenshots/capture_1763615574215.png)
+
+**9. Performance Reviews**
+![Performance Reviews](screenshots/capture_1763615577406.png)
+
+**10. Recruitment Dashboard**
+![Recruitment Dashboard](screenshots/capture_1763615580057.png)
+
+**11. Job Postings**
+![Job Postings](screenshots/capture_1763615581974.png)
+
+**12. Candidate Management**
+![Candidate Management](screenshots/capture_1763615584287.png)
+
+**13. Interview Scheduler**
+![Interview Scheduler](screenshots/capture_1763615586875.png)
+
+**14. Interview Details**
+![Interview Details](screenshots/capture_1763615591198.png)
+
+**15. Documents & Reports**
+![Documents & Reports](screenshots/capture_1763615598580.png)
+
+**16. Settings Page**
+![Settings Page](screenshots/capture_1763615612905.png)
+
+**17. Help & Support**
+![Help & Support](screenshots/capture_1763615622257.png)
+
+---
+
 ## 📞 Support & Troubleshooting
 
 **Port Already In Use:**
