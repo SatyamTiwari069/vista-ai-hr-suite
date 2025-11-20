@@ -802,9 +802,9 @@ Proprietary - Vista AI HR Suite
 
 ---
 
-## 📸 Screenshots & UI Preview
+## 📸 Screenshots & UI Preview (54 Screenshots)
 
-### Dashboard & Main Pages
+### Original Dashboard & Main Pages (17 Screenshots)
 
 **1. Login Page**
 ![Login Page](screenshots/capture_1763615504725.png)
@@ -856,6 +856,124 @@ Proprietary - Vista AI HR Suite
 
 **17. Help & Support**
 ![Help & Support](screenshots/capture_1763615622257.png)
+
+---
+
+### Extended Screenshots - Additional Features (37 New Screenshots)
+
+**18. Application Overview 1**
+![Application Overview 1](screenshots/capture_1763616036279.png)
+
+**19. Application Overview 2**
+![Application Overview 2](screenshots/capture_1763616049171.png)
+
+**20. Employee Details**
+![Employee Details](screenshots/capture_1763616052401.png)
+
+**21. Attendance Details**
+![Attendance Details](screenshots/capture_1763616055987.png)
+
+**22. Leave Request Form**
+![Leave Request Form](screenshots/capture_1763616061171.png)
+
+**23. Leave Approval**
+![Leave Approval](screenshots/capture_1763616067492.png)
+
+**24. Payroll Slip View 1**
+![Payroll Slip View 1](screenshots/capture_1763616077828.png)
+
+**25. Payroll Slip View 2**
+![Payroll Slip View 2](screenshots/capture_1763616080233.png)
+
+**26. Payroll Processing**
+![Payroll Processing](screenshots/capture_1763616082996.png)
+
+**27. Performance Evaluation**
+![Performance Evaluation](screenshots/capture_1763616087048.png)
+
+**28. Performance Analysis**
+![Performance Analysis](screenshots/capture_1763616090345.png)
+
+**29. Training Programs**
+![Training Programs](screenshots/capture_1763616092917.png)
+
+**30. Training Enrollment**
+![Training Enrollment](screenshots/capture_1763616095587.png)
+
+**31. Job Description**
+![Job Description](screenshots/capture_1763616098340.png)
+
+**32. Candidate Resume**
+![Candidate Resume](screenshots/capture_1763616102737.png)
+
+**33. Interview Feedback 1**
+![Interview Feedback 1](screenshots/capture_1763616118277.png)
+
+**34. Interview Feedback 2**
+![Interview Feedback 2](screenshots/capture_1763616121390.png)
+
+**35. Interview Schedule Calendar**
+![Interview Schedule Calendar](screenshots/capture_1763616147454.png)
+
+**36. Document Export - Employees**
+![Document Export - Employees](screenshots/capture_1763616152857.png)
+
+**37. Document Export - Attendance**
+![Document Export - Attendance](screenshots/capture_1763616155341.png)
+
+**38. Document Export - Leave**
+![Document Export - Leave](screenshots/capture_1763616173176.png)
+
+**39. Document Export - Payroll**
+![Document Export - Payroll](screenshots/capture_1763616176984.png)
+
+**40. Department Management**
+![Department Management](screenshots/capture_1763616179985.png)
+
+**41. Employee Lifecycle Events**
+![Employee Lifecycle Events](screenshots/capture_1763616183169.png)
+
+**42. Bulk Upload**
+![Bulk Upload](screenshots/capture_1763616185771.png)
+
+**43. Data Export - HR Reports**
+![Data Export - HR Reports](screenshots/capture_1763616188869.png)
+
+**44. System Analytics 1**
+![System Analytics 1](screenshots/capture_1763616191487.png)
+
+**45. System Analytics 2**
+![System Analytics 2](screenshots/capture_1763616195423.png)
+
+**46. User Roles & Permissions**
+![User Roles & Permissions](screenshots/capture_1763616197492.png)
+
+**47. Access Control Settings**
+![Access Control Settings](screenshots/capture_1763616200757.png)
+
+**48. API Documentation View**
+![API Documentation View](screenshots/capture_1763616217350.png)
+
+**49. Database Schema Overview**
+![Database Schema Overview](screenshots/capture_1763616221795.png)
+
+**50. System Health Status**
+![System Health Status](screenshots/capture_1763616226093.png)
+
+**51. Error Handling & Alerts**
+![Error Handling & Alerts](screenshots/capture_1763616229936.png)
+
+**52. Mobile Responsive View 1**
+![Mobile Responsive View 1](screenshots/capture_1763616233272.png)
+
+**53. Mobile Responsive View 2**
+![Mobile Responsive View 2](screenshots/capture_1763616239591.png)
+
+**54. Dark Mode Theme**
+![Dark Mode Theme](screenshots/capture_1763616246978.png)
+
+**55. Light Mode Theme**
+![Light Mode Theme](screenshots/capture_1763616249492.png)
 
 ---
 
